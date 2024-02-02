@@ -377,10 +377,15 @@ class ANETdetectionGrouped(object):
 ################################################################################
 def evaluate_article_grounding(annotations_json, results_csv, split, tiou_thresholds):
 
+    # TODO: Make sure we only evaluate on the correct annotations for the split 
+
     ants = json.load(open(annotations_json))
     taxonomy = pd.read_json(ants['taxonomy'])
     ants = ants['annotations']
-    # taxonomy = pd.read_csv(taxonomy_csv)
+
+    ants = {kk:vv for kk,vv in ants.items() if vv['subset'] == split}
+
+    print(f'{len(ants)} annotations found for {split} split')
 
     act2steps = { kk: set(vv.global_step_index.values) for kk,vv in  taxonomy.groupby('activity')  }
     results = pd.read_csv(open(results_csv))
@@ -410,24 +415,7 @@ def evaluate_article_grounding(annotations_json, results_csv, split, tiou_thresh
     output_dict = {}
     _, output_dict['grounding mAP activity-grouped'] = evaluator_group.evaluate(results_grounding, verbose=True) # group are only returned by the activity mAP evaluator are None otherwise
 
-    # print(f'detection mAP = {100*mAP:.1f}%. grounding mAP = {100*mAP_grounding:.1f}%')
     for kk,vv in output_dict.items():
         print(f'{kk} = {100*output_dict[kk]:.1f}%')
 
-# ################################################################################
-# if __name__ == '__main__':
-#     """Entry Point"""
-#     # the arg parser
-#     parser = argparse.ArgumentParser(
-#       description='Train a point-based transformer for action localization')
-                        
-#     parser.add_argument( "--results_csv", required=True, type=str)                        
-#     parser.add_argument( "--annotations_json", type=str, default='annotations_v2/annotations_coin_format.json')                        
-#     parser.add_argument( "--taxonomy_csv", type=str, default='annotations_v2/taxonomy.csv')                        
-#     parser.add_argument( "--split", type=str, required=True, choices=('val_seen', 'val_unseen', 'test_seen', 'test_unseen'))                        
-#     parser.add_argument( "--tiou_thresholds", type=str, default=np.linspace(0.3, 0.7, 5))                         
-#     parser.add_argument( "--eval_detection", type=int, default=0)                         
-#     parser.add_argument( "--label", type=str, default='label_id')                         
-
-#     args = parser.parse_args()
-#     main(args)
+    return output_dict['grounding mAP activity-grouped']

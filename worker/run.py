@@ -19,8 +19,8 @@ def run():
     # user_submission_file_path = f"{current_working_directory}/submission_test.json"
 
 
-    challenge_id = 2
-    challenge_phase = "map_test_unseen"  # Add the challenge phase codename to be tested
+    challenge_id = 1
+    challenge_phase = "test_seen"  # Add the challenge phase codename to be tested
     # annotation_file_path = '/private/home/afourast/htstep/data/annotations_private.json'
     annotation_file_path = '/private/home/afourast/ht100m-step/public_release_v1/annotations_private.json'
     user_submission_file_path = f"{current_working_directory}/submissions_for_test/eval_results_test_seen_epoch_008_200.csv"
