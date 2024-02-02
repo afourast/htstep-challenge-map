@@ -1,7 +1,7 @@
 # If you are not sure what all these fields mean, please refer our documentation here:
 # https://evalai.readthedocs.io/en/latest/configuration.html
-title: HT-Step challenge 
-short_description: Step grounding evaluation on the HT-Step test set 
+title: HT-Step article grounding challenge (full temporal segments)
+short_description: Step grounding evaluation on the HT-Step benchmark
 description: templates/description.html
 evaluation_details: templates/evaluation_details.html
 terms_and_conditions: templates/terms_and_conditions.html
@@ -31,15 +31,15 @@ leaderboard:
 
 challenge_phases:
   - id: 1
-    name: Test Phase
-    description: templates/challenge_phase_2_description.html
+    name: Seen Test Phase
+    description: templates/challenge_phase_1_description.html
     leaderboard_public: True
     is_public: True
     is_submission_public: True
     start_date: 2019-01-01 00:00:00
     end_date: 2099-05-24 23:59:59
     test_annotation_file: annotations/test_annotations_testsplit.json
-    codename: test
+    codename: test_seen
     max_submissions_per_day: 10
     max_submissions_per_month: 50
     max_submissions: 100
@@ -71,7 +71,32 @@ challenge_phases:
     is_partial_submission_evaluation_enabled: False
 
   - id: 2
-    name: mAP grounding seen Test Phase
+    name: Unseen Test Phase
+    description: templates/challenge_phase_2_description.html
+    leaderboard_public: False
+    is_public: False
+    is_submission_public: False
+    start_date: 2019-01-01 00:00:00
+    end_date: 2099-05-24 23:59:59
+    test_annotation_file: annotations/test_annotations_testsplit.json
+    codename: test_unseen
+    max_submissions_per_day: 10
+    max_submissions_per_month: 50
+    max_submissions: 100
+    default_submission_meta_attributes:
+      - name: method_name
+        is_visible: True
+      - name: method_description
+        is_visible: True
+      - name: project_url
+        is_visible: True
+      - name: publication_url
+        is_visible: True
+    is_restricted_to_select_one_submission: False
+    is_partial_submission_evaluation_enabled: False
+
+  - id: 2
+    name: Unseen Val Phase
     description: templates/challenge_phase_3_description.html
     leaderboard_public: False
     is_public: False
@@ -79,7 +104,7 @@ challenge_phases:
     start_date: 2019-01-01 00:00:00
     end_date: 2099-05-24 23:59:59
     test_annotation_file: annotations/test_annotations_testsplit.json
-    codename: map_test_unseen
+    codename: val_unseen
     max_submissions_per_day: 10
     max_submissions_per_month: 50
     max_submissions: 100
@@ -98,10 +123,13 @@ challenge_phases:
 dataset_splits:
   - id: 1
     name: Seen Test Split
-    codename: test_split
+    codename: seen_test_split
   - id: 2
     name: Unseen Test Split
     codename: unseen_test_split
+  - id: 3
+    name: Unseen Val Split
+    codename: unseen_val_split
 
 challenge_phase_splits:
   - challenge_phase_id: 1
@@ -112,7 +140,13 @@ challenge_phase_splits:
     is_leaderboard_order_descending: True
   - challenge_phase_id: 2
     leaderboard_id: 2
-    dataset_split_id: 1
+    dataset_split_id: 2
+    visibility: 3
+    leaderboard_decimal_precision: 2
+    is_leaderboard_order_descending: True
+  - challenge_phase_id: 3
+    leaderboard_id: 3
+    dataset_split_id: 3
     visibility: 3
     leaderboard_decimal_precision: 2
     is_leaderboard_order_descending: True
