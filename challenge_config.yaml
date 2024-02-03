@@ -1,6 +1,7 @@
 # If you are not sure what all these fields mean, please refer our documentation here:
 # https://evalai.readthedocs.io/en/latest/configuration.html
-title: HT-Step article grounding challenge (full temporal segments)
+# title: HT-Step article grounding challenge (full temporal segments)
+title: HT-Step article grounding challenge (temporal segment detection)
 short_description: Step grounding evaluation on the HT-Step benchmark
 description: templates/description.html
 evaluation_details: templates/evaluation_details.html
@@ -148,13 +149,13 @@ challenge_phases:
 dataset_splits:
   - id: 1
     name: Seen Test Split
-    codename: seen_test_split
+    codename: seen_test
   - id: 2
     name: Unseen Test Split
-    codename: unseen_test_split
+    codename: unseen_test
   - id: 3
     name: Unseen Val Split
-    codename: unseen_val_split
+    codename: unseen_val
 
 challenge_phase_splits:
   - challenge_phase_id: 1
