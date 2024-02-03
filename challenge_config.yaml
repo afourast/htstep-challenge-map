@@ -19,36 +19,36 @@ leaderboard:
   - id: 1
     schema:
       {
-        "labels": ["Recall@1"],
-        "default_order_by": "Recall@1",
+        "labels": ["mAP"],
+        "default_order_by": "mAP",
         "metadata": {
-          "Recall@1": {
+          "mAP": {
             "sort_ascending": True,
-            "description": "Recall output for leaderboard.",
+            "description": "Article grounding mAP output for leaderboard.",
           },
         }
       }
   - id: 2
     schema:
       {
-        "labels": ["Recall@1"],
-        "default_order_by": "Recall@1",
+        "labels": ["mAP"],
+        "default_order_by": "mAP",
         "metadata": {
-          "Recall@1": {
+          "mAP": {
             "sort_ascending": True,
-            "description": "Recall output for leaderboard.",
+            "description": "Article grounding mAP output for leaderboard.",
           },
         }
       }
   - id: 3
     schema:
       {
-        "labels": ["Recall@1"],
-        "default_order_by": "Recall@1",
+        "labels": ["mAP"],
+        "default_order_by": "mAP",
         "metadata": {
-          "Recall@1": {
+          "mAP": {
             "sort_ascending": True,
-            "description": "Recall output for leaderboard.",
+            "description": "Article grounding mAP output for leaderboard.",
           },
         }
       }

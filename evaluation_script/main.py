@@ -455,14 +455,14 @@ def evaluate(test_annotation_file, user_submission_file, phase_codename, **kwarg
 
     output["result"] = [
         {
-            f"{split}_split": {
+            f"{split}": {
                 "mAP": grounding_map,
             }
         }
     ]
 
     # output["submission_result"] = output['result'][0]["test_split"]
-    output["submission_result"] = output['result'][0][f"{split}_split"]
+    output["submission_result"] = output['result'][0][f"{split}"]
     # output["submission_result"] = output["result"][0]
 
     print(output)
