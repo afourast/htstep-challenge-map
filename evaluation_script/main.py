@@ -376,17 +376,17 @@ class ANETdetectionGrouped(object):
 ################################################################################
 def evaluate_article_grounding(annotations_json, results_csv, split, tiou_thresholds):
 
-    # TODO: Make sure we only evaluate on the correct annotations for the split 
-
     ants = json.load(open(annotations_json))
     taxonomy = pd.read_json(ants['taxonomy'])
     ants = ants['annotations']
 
+    # -- get the annotations for this split
     ants = {kk:vv for kk,vv in ants.items() if vv['subset'] == split}
 
     print(f'{len(ants)} annotations found for {split} split')
 
     act2steps = { kk: set(vv.global_step_index.values) for kk,vv in  taxonomy.groupby('activity')  }
+
     results = pd.read_csv(open(results_csv))
     
     # -- Make an activity index and get mapping from step index to activity index 
@@ -401,15 +401,36 @@ def evaluate_article_grounding(annotations_json, results_csv, split, tiou_thresh
         label='id',
     )
 
-    print(f"{split} split: evaluating {len(results):,} predictions on {len(results['video-id'].unique())} videos")
+    # -- for every annotated video get the variation and make a list of steps in that variation 
+    stepid2variation = { row.global_step_index: row.variation  for _,row in  taxonomy.iterrows()  }
+    vid2var = {}
+    for vid, vid_annotations in ants.items():
+        var = None 
+        for seg in vid_annotations['annotations']:
+            if var is None:
+                var = stepid2variation[seg['id']] 
+            assert var == stepid2variation[seg['id']] 
+        vid2var[vid] = var
+
+    act2var2steps = { kk: { kkk: set(vvv.global_step_index.values) for kkk,vvv in vv.groupby('variation') }
+                 for kk,vv in  taxonomy.groupby('activity')  }
+        
 
     keep = []
     for ii, (vid, lab) in enumerate(list(zip(results['video-id'].values, results.label.values))):
         act = ants[vid]['activity']
-        if lab in act2steps[act]:
+        var = vid2var[vid]
+
+        assert len(act2steps[act].intersection( act2var2steps[act][var] )) == len(act2var2steps[act][var])
+
+        if lab in act2var2steps[act][var]:
             keep.append(ii)
+
+        # if lab in act2steps[act]:
+        #     keep.append(ii)
     
     results_grounding = results.iloc[keep]
+    print(f"{split} split: evaluating {len(results_grounding):,} / {len(results):,} predictions on {len(results['video-id'].unique())} videos")
 
     output_dict = {}
     _, output_dict['grounding mAP activity-grouped'] = evaluator_group.evaluate(results_grounding, verbose=True) # group are only returned by the activity mAP evaluator are None otherwise
@@ -419,14 +440,8 @@ def evaluate_article_grounding(annotations_json, results_csv, split, tiou_thresh
 
     return output_dict['grounding mAP activity-grouped']
 
-
-
-def evaluate(test_annotation_file, user_submission_file, phase_codename, **kwargs):
-
-    evaluate_map(test_annotation_file, user_submission_file, phase_codename, **kwargs)
-
         
-def evaluate_map(test_annotation_file, user_submission_file, phase_codename, **kwargs):
+def evaluate(test_annotation_file, user_submission_file, phase_codename, **kwargs):
 
     assert phase_codename in ['test_seen', 'test_unseen', 'val_unseen']
 
