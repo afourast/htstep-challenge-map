@@ -149,13 +149,13 @@ challenge_phases:
 dataset_splits:
   - id: 1
     name: Seen Test Split
-    codename: seen_test
+    codename: test_seen
   - id: 2
     name: Unseen Test Split
-    codename: unseen_test
+    codename: test_unseen
   - id: 3
     name: Unseen Val Split
-    codename: unseen_val
+    codename: val_unseen
 
 challenge_phase_splits:
   - challenge_phase_id: 1
