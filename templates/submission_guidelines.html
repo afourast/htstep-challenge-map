@@ -1,32 +1,42 @@
 <h2>Test Server Input Guidelines</h2>
 <h3>Input</h3>
 <p>
-  We provide a list of test videos along with their activity label and candidate steps.
-  You can find the input file <a href="https://dl.fbaipublicfiles.com/ht-step/test_input.json">here</a>.
+  We provide a list of candidate step ids for all the videos in the dataset 
+   <a href="https://github.com/facebookresearch/htstep/blob/main/data/video_candidate_steps.json">here</a>.
   The video IDs correspond to the original YouTube IDs used in HowTo100M.
-  For each step, we provide the 'step_headline' and 'step_paragraph' entries, which can be used to ground the step.
+  The step ids point to entries in the 
+  <a href="https://github.com/facebookresearch/htstep/blob/main/data/video_candidate_steps.json">step taxonomy</a>,
+   where the 'step_headline' and 'step_paragraph' for each one are listedn, and which can be used to ground the steps in the video.
+   Note: All the steps are not necessary groundable in the video and the ground truth annotations might not include segments with all of them.
+   However it is guaranteed that the ground truth file only contains only steps from this list for every video. 
+  Therefore, the evaluation script ignores any predictions for steps that are not included in the video's candidate step list.  
 </p>
 <h3>Example Expected JSON</h3>
 <p>
-  The test server expects JSON file containing video IDs as keys and lists of single timestamps as values.
-  The timestamps in the JSON represent the predictions of your model for grounding the step at the corresponding index in the list.
-  The order of the steps aligns with the provided input file, which lists the candidate steps for each test video.
+  The test server expects a csv file containing one entry for every predicted step detection. 
+  The expected values that every prediction entry should have are:
+  <pre>
+    - vide-id: Video identifier (original YouTube IDs)
+    - t-start: Start timestamp of the segment in seconds
+    - t-end: End timestamp of the segment in seconds
+    - label: The step id 
+    - score: A confidence score for the prediction
+  </pre>
 </p>
 <pre>
   {
-    "---0tKA3iYI": [196, 456, 34, 105, 721, 82],
-    "--Gscx86GA0": [0, 295, 509, 143, 612],
-    "--KXjWTy7Yw": [200, 48, 831, 630, 402]
+  video-id,t-start,t-end,label,score
+  ---0tKA3iYI,392.21793,432.57596,944,0.4769538
+  ---0tKA3iYI,627.96606,632.911,946,0.42822412
+  ---0tKA3iYI,621.6395,626.98517,945,0.3877319
+  ---0tKA3iYI,601.0815,631.44446,944,0.37311503
+  ---0tKA3iYI,423.2551,432.52585,944,0.3729765
+  zzOehMK9AnA,245.35982,338.58514,2323,0.43256226
+  zzOehMK9AnA,242.08182,340.9041,2313,0.41332325
+  zzOehMK9AnA,182.38895,230.25858,2312,0.33553523
+  zzOehMK9AnA,235.53831,240.30016,2313,0.32092258
+  zzOehMK9AnA,235.53831,240.30016,2318,0.3127853
   }
 </pre>
-<p>In this example, we have three video IDs with their corresponding lists of timestamps.</p>
-<ul>
-  <li>Video ID "---0tKA3iYI" has predictions: [196, 456, 0, 105, 721, 82]</li>
-  <li>Video ID "--Gscx86GA0" has predictions: [0, 295, 0, 143, 612]</li>
-  <li>Video ID "--KXjWTy7Yw" has predictions: [200, 48, 831, 0, 402]</li>
-</ul>
-<p>The predicted timestamp for each video will be compared to the ground truth segment annotations.
-  Only one prediction should be provided for each candidate step.
-  Predictions that fall within any of the ground truth segments for the corresponding step contribute towards higher recall scores.
-  Predictions for non-alignable steps will be ignored.
-</p>
+<p>In this example, there are 10 segment predictions in total, 5 for video 
+  with id '---0tKA3iYI' and 5 for video with id "zzOehMK9AnA".</p>
