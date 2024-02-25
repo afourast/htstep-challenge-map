@@ -1,26 +1,26 @@
-<h2>Test Server Input Guidelines</h2>
-<h3>Input</h3>
+<h4>Test Server Input Guidelines</h4>
+<h4>Input</h4>
 <p>
   We provide a list of candidate step ids for all the videos in the dataset 
    <a href="https://github.com/facebookresearch/htstep/blob/main/data/video_candidate_steps.json">here</a>.
   The video IDs correspond to the original YouTube IDs used in HowTo100M.
   The step ids point to entries in the 
-  <a href="https://github.com/facebookresearch/htstep/blob/main/data/video_candidate_steps.json">step taxonomy</a>,
+  <a href="https://github.com/facebookresearch/htstep/blob/main/data/taxonomy.json">step taxonomy</a>,
    where the 'step_headline' and 'step_paragraph' for each one are listedn, and which can be used to ground the steps in the video.
    Note: All the steps are not necessary groundable in the video and the ground truth annotations might not include segments with all of them.
    However it is guaranteed that the ground truth file only contains only steps from this list for every video. 
   Therefore, the evaluation script ignores any predictions for steps that are not included in the video's candidate step list.  
 </p>
-<h3>Example Expected JSON</h3>
+<h4>Expected prediction CSV format</h4>
 <p>
-  The test server expects a csv file containing one entry for every predicted step detection. 
+  The test server expects a CSV file containing one entry for every predicted step detection. 
   The expected values that every prediction entry should have are:
   <ul>
     <li>  <b>video-id</b>:  Video identifier (original YouTube IDs)     </li>
     <li>  <b>t-start</b>:   Start timestamp of the segment in seconds   </li>
     <li>  <b>t-end</b>:     End timestamp of the segment in seconds     </li>
-    <li>  <b></b>label</b>: The step id                                 </li>
-    <li>  <b></b>score</b>: A confidence score for the prediction      </li>
+    <li>  <b>label</b>: The step id                                 </li>
+    <li>  <b>score</b>: A confidence score for the prediction      </li>
   </ul>
 </p>
 
@@ -45,3 +45,13 @@ Example submission.csv:
 </p>
 <p>In this example, there are 10 segment predictions in total, 5 for video 
   with id '---0tKA3iYI' and 5 for video with id "zzOehMK9AnA".</p>
+
+<h4>Evaluation splits</h4>
+We provide 3 different evaluation settings: 'test_seen', 'val_unseen' and 'test_unseen', corresponding
+to the evaluation splits described in the paper. 
+The list of videos for each split is provided in the 
+<a href="https://github.com/facebookresearch/htstep/blob/main/data/video_splits.json">video splits file</a>.
+Every split is evaluated as a separate "phase".
+When submitting a submission file for a specific phase, only predictions on videos included in the corresponding splits are 
+taken into account, any predictions on other videos are ignored.  
+
